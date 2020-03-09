@@ -1,11 +1,14 @@
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers.core import Dense
 from keras import optimizers, initializers
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from data_setting import load_dataset, slicing_images, flatting_images
-from test_my_image import test_my_image
+import time
+
+current_time = time.time()
+current_time_str = time.strftime("%Y%m%d_%H%M", time.localtime(current_time))
 
 (
     train_set_images128_orig,
@@ -46,8 +49,8 @@ model.compile(
     optimizer=optimizers.Adamax(lr=0.002, beta_1=0.9, beta_2=0.999, decay=0.0),
     metrics=["accuracy"],
 )
-model.fit(train_set_X, train_set_Y, epochs=20, batch_size=1000)
-#
-test_result = test_my_image(model, "cat_1", 4)
-plt.imshow(test_result)
-plt.show()
+
+model.fit(train_set_X, train_set_Y, epochs=1, batch_size=1000)
+
+model.save("models/" + current_time_str + ".h5")
+
