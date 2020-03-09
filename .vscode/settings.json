@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "c:\\Users\\Minho\\Documents\\GitHub\\image-resize\\.venv\\Scripts\\python.exe"
+    "python.pythonPath": "/Users/MINHO/Documents/github/Image-Resize/.venv/bin/python3.6",
+    "python.formatting.provider": "black"
 }
