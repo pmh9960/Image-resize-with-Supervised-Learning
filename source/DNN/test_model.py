@@ -1,3 +1,7 @@
+import os, sys
+
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -6,11 +10,18 @@ from keras.models import model_from_json
 from keras import optimizers
 import keras
 from keras.utils.vis_utils import plot_model
-import os
+from preprocessing import preprocessing_images
 
 
 def predict_my_image(model, filename, num_slice):
-    test128_orig, test256_orig, test512_orig = load_dataset(filename)
+
+    index = 0
+    preprocessing_images.preprocess_images("my_images", filename)
+    preprocessing_images.preprocessed_images_to_h5py(
+        "my_images", [filename], index=index
+    )
+
+    test128_orig, test256_orig, test512_orig = load_dataset("my_images" + str(index))
     test128, test256 = slicing_images(num_slice, test128_orig, test256_orig)
 
     test128_flatten, _ = flatting_images(test128, test256)
@@ -60,9 +71,9 @@ def last_model():
     return file_list[-1]
 
 
-# folder_name = "20200310_1357"
-folder_name = last_model()
+folder_name = "20200310_1711"
+# folder_name = last_model()
 loaded_model = load_model(folder_name)
 num_file = open("models/" + folder_name + "/num_slice.txt", "r")
 num_slice = int(num_file.read())
-predict_my_image(loaded_model, "cat_2", num_slice)
+predict_my_image(loaded_model, "juwon", num_slice)
