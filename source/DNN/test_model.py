@@ -38,11 +38,11 @@ def predict_my_image(model, filename, num_slice):
             ans = np.append(ans, result, axis=0)
 
     plt.imshow(ans)
-    plt.savefig("models/" + folder_name + "/cat1_predict.png")
+    plt.savefig("models/" + folder_name + "/" + filename + "_predict.png")
     plt.imshow(test128_orig.reshape(128, 128, 3))
-    plt.savefig("models/" + folder_name + "/cat1_128_orig.png")
+    plt.savefig("models/" + folder_name + "/" + filename + "_128_orig.png")
     plt.imshow(test256_orig.reshape(256, 256, 3))
-    plt.savefig("models/" + folder_name + "/cat1_256_orig.png")
+    plt.savefig("models/" + folder_name + "/" + filename + "_256_orig.png")
 
 
 def load_model(folder_name):
@@ -65,5 +65,4 @@ folder_name = last_model()
 loaded_model = load_model(folder_name)
 num_file = open("models/" + folder_name + "/num_slice.txt", "r")
 num_slice = int(num_file.read())
-print(num_slice)
 predict_my_image(loaded_model, "cat_2", num_slice)
