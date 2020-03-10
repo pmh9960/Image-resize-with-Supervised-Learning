@@ -3,9 +3,11 @@ from keras.layers.core import Dense
 from keras import optimizers, initializers
 import numpy as np
 import tensorflow as tf
+import keras
 import matplotlib.pyplot as plt
 from data_setting import load_dataset, slicing_images, flatting_images
-import time
+import time, os
+from keras.utils.vis_utils import plot_model
 
 current_time = time.time()
 current_time_str = time.strftime("%Y%m%d_%H%M", time.localtime(current_time))
@@ -36,11 +38,14 @@ model = Sequential()
 
 model.add(
     Dense(
-        12288,
+        6144,
         input_dim=3072,
-        activation="sigmoid",
+        activation="tanh",
         kernel_initializer=initializers.he_normal(),
     )
+)
+model.add(
+    Dense(12288, activation="sigmoid", kernel_initializer=initializers.he_normal(),)
 )
 
 
@@ -50,7 +55,16 @@ model.compile(
     metrics=["accuracy"],
 )
 
-model.fit(train_set_X, train_set_Y, epochs=1, batch_size=1000)
+model.fit(train_set_X, train_set_Y, epochs=500, batch_size=300)
 
-model.save("models/" + current_time_str + ".h5")
+os.mkdir("models/" + current_time_str)
+# Save model with json format
+model_json = model.to_json()
+with open("models/" + current_time_str + "/model" + ".json", "w") as json_file:
+    json_file.write(model_json)
+
+# Save weight with h5 format
+model.save_weights("models/" + current_time_str + "/weight.h5")
+
+plot_model(model, to_file="models/" + current_time_str + "/model.png", show_shapes=True)
 

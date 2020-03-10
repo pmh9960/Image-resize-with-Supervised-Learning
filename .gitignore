@@ -3,6 +3,7 @@ preprocessed_images/*
 sample_images/*
 .DS_Store
 models/
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
