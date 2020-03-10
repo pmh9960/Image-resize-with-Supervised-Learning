@@ -20,7 +20,7 @@ current_time_str = time.strftime("%Y%m%d_%H%M", time.localtime(current_time))
 # print(train_set_images128_orig.shape)
 # m_train = train_set_images128_orig.shape[0]
 
-num_slice = 4
+num_slice = 32
 train_set_images128, train_set_images256 = slicing_images(
     num_slice, train_set_images128_orig, train_set_images256_orig
 )
@@ -38,24 +38,20 @@ model = Sequential()
 
 model.add(
     Dense(
-        6144,
-        input_dim=3072,
-        activation="tanh",
+        192,
+        input_dim=48,
+        activation="sigmoid",
         kernel_initializer=initializers.he_normal(),
     )
 )
-model.add(
-    Dense(12288, activation="sigmoid", kernel_initializer=initializers.he_normal(),)
-)
+# model.add(Dense(192, activation="sigmoid", kernel_initializer=initializers.he_normal(),))
 
 
 model.compile(
-    loss="mean_squared_error",
-    optimizer=optimizers.Adamax(lr=0.002, beta_1=0.9, beta_2=0.999, decay=0.0),
-    metrics=["accuracy"],
+    loss="mean_squared_error", optimizer=optimizers.Adam(), metrics=["accuracy"],
 )
 
-model.fit(train_set_X, train_set_Y, epochs=500, batch_size=300)
+model.fit(train_set_X, train_set_Y, epochs=20, batch_size=300)
 
 os.mkdir("models/" + current_time_str)
 # Save model with json format

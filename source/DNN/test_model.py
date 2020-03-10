@@ -12,19 +12,23 @@ def predict_my_image(model, filename, num_slice):
     test128_orig, test256_orig, test512_orig = load_dataset(filename)
     test128, test256 = slicing_images(num_slice, test128_orig, test256_orig)
 
-    test128_flatten, test256_flatten = flatting_images(test128, test256)
+    test128_flatten, _ = flatting_images(test128, test256)
 
     testX = test128_flatten / 255.0
-    testY = test256_flatten / 255.0
+
     predict_testY = model.predict(testX)
     for i in range(num_slice):
         for j in range(num_slice):
             if j == 0:
-                result = predict_testY[i * num_slice + j].reshape((64, 64, 3))
+                result = predict_testY[i * num_slice + j].reshape(
+                    (int(256 / num_slice), int(256 / num_slice), 3)
+                )
             else:
                 result = np.append(
                     result,
-                    predict_testY[i * num_slice + j].reshape((64, 64, 3)),
+                    predict_testY[i * num_slice + j].reshape(
+                        (int(256 / num_slice), int(256 / num_slice), 3)
+                    ),
                     axis=1,
                 )
         if i == 0:
@@ -33,7 +37,9 @@ def predict_my_image(model, filename, num_slice):
             ans = np.append(ans, result, axis=0)
 
     plt.imshow(ans)
-    plt.savefig("models/" + folder_name + "/predict_cat1.png")
+    plt.savefig("models/" + folder_name + "/cat1_predict.png")
+    plt.imshow(test256_orig.reshape(256, 256, 3))
+    plt.savefig("models/" + folder_name + "/cat1_orig.png")
 
 
 def load_model(folder_name):
@@ -46,7 +52,7 @@ def load_model(folder_name):
     return loaded_model
 
 
-folder_name = "20200310_1200"
+folder_name = "20200310_1317"
 loaded_model = load_model(folder_name)
 
 
@@ -56,4 +62,4 @@ loaded_model = load_model(folder_name)
 # #     metrics=["accuracy"],
 # # )
 
-predict_my_image(loaded_model, "cat_1", 4)
+predict_my_image(loaded_model, "cat_1", 32)
