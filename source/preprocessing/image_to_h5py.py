@@ -31,6 +31,6 @@ train.attrs["desc"] = "Training set"
 # dev.attrs["desc"] = "Development set"
 # test.attrs["desc"] = "Test set"
 
-train.create_dataset("images128", dtype="int8", data=images128)
-train.create_dataset("images256", dtype="int8", data=images256)
-train.create_dataset("images512", dtype="int8", data=images512)
+train.create_dataset("images128", dtype="int32", data=images128)
+train.create_dataset("images256", dtype="int32", data=images256)
+train.create_dataset("images512", dtype="int32", data=images512)

@@ -6,6 +6,7 @@ from keras.models import model_from_json
 from keras import optimizers
 import keras
 from keras.utils.vis_utils import plot_model
+import os
 
 
 def predict_my_image(model, filename, num_slice):
@@ -38,8 +39,10 @@ def predict_my_image(model, filename, num_slice):
 
     plt.imshow(ans)
     plt.savefig("models/" + folder_name + "/cat1_predict.png")
+    plt.imshow(test128_orig.reshape(128, 128, 3))
+    plt.savefig("models/" + folder_name + "/cat1_128_orig.png")
     plt.imshow(test256_orig.reshape(256, 256, 3))
-    plt.savefig("models/" + folder_name + "/cat1_orig.png")
+    plt.savefig("models/" + folder_name + "/cat1_256_orig.png")
 
 
 def load_model(folder_name):
@@ -52,14 +55,15 @@ def load_model(folder_name):
     return loaded_model
 
 
-folder_name = "20200310_1317"
+def last_model():
+    file_list = os.listdir("models")
+    return file_list[-1]
+
+
+# folder_name = "20200310_1357"
+folder_name = last_model()
 loaded_model = load_model(folder_name)
-
-
-# # loaded_model.compile(
-# #     loss="mean_squared_error",
-# #     optimizer=optimizers.Adamax(lr=0.002, beta_1=0.9, beta_2=0.999, decay=0.0),
-# #     metrics=["accuracy"],
-# # )
-
-predict_my_image(loaded_model, "cat_1", 32)
+num_file = open("models/" + folder_name + "/num_slice.txt", "r")
+num_slice = int(num_file.read())
+print(num_slice)
+predict_my_image(loaded_model, "cat_2", num_slice)
