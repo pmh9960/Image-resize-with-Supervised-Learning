@@ -79,23 +79,26 @@ def slicing_images(num_slice, train_set_X_orig, train_set_Y_orig):
     return train_set_X, train_set_Y
 
 
-def save_history(history, current_time_str):
+def save_history(history, current_time_str, valid=True):
     # Plot training & validation accuracy values
     plt.plot(history.history["acc"])
-    plt.plot(history.history["val_acc"])
+    if valid : plt.plot(history.history["val_acc"])
     plt.title("Model accuracy")
     plt.ylabel("Accuracy")
     plt.xlabel("Epoch")
-    plt.legend(["Train", "Test"], loc="upper left")
+    if valid : plt.legend(["Train", "Test"], loc="upper left")
+    else : plt.legend(["Train"], loc="upper left")
     plt.savefig("models/" + current_time_str + "/history_accuracy.png")
     plt.clf()
-    
+
     # Plot training & validation loss values
     plt.plot(history.history["loss"])
-    plt.plot(history.history["val_loss"])
+    if valid : plt.plot(history.history["val_loss"])
     plt.title("Model loss")
     plt.ylabel("Loss")
     plt.xlabel("Epoch")
-    plt.legend(["Train", "Test"], loc="upper left")
+    if valid : plt.legend(["Train", "Test"], loc="upper left")
+    else : plt.legend(["Train"], loc="upper left")
     plt.savefig("models/" + current_time_str + "/history_loss.png")
+    plt.clf()
 

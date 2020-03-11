@@ -45,7 +45,7 @@ model = Sequential()
 layers_dim = []
 input_dim = int((128 / num_slice) ** 2 * 3)  # 768
 layers_dim.append(input_dim)
-layers_dim.append(5000)
+layers_dim.append(10000)
 output_dim = int((256 / num_slice) ** 2 * 3)  # 3072
 layers_dim.append(output_dim)
 
@@ -79,13 +79,14 @@ model.compile(
     loss="mean_squared_error", optimizer=optimizers.Adam(), metrics=["accuracy"],
 )
 print(round(time.time() - start, 2), "s")
+print(layers_dim)
 
 history = model.fit(
     train_set_X,
     train_set_Y,
-    validation_split=0.25,
-    epochs=300,
-    batch_size=100,
+    # validation_split=0.25,
+    epochs=5,
+    batch_size=300,
     shuffle=True,
 )
 
@@ -105,7 +106,7 @@ with open(
     "models/" + current_time_str + "/num_slice" + ".txt", "w", encoding="utf-8",
 ) as num_file:
     num_file.write(str(num_slice))
-save_history(history, current_time_str)
+save_history(history, current_time_str, valid=False)
 
 
 plot_model(model, to_file="models/" + current_time_str + "/model.png", show_shapes=True)
