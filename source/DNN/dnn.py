@@ -25,7 +25,7 @@ print(round(time.time() - start, 2), "s")
 
 print("Resize Data...")
 start = time.time()
-num_slice = 4
+num_slice = 8
 train_set_images128, train_set_images256 = slicing_images(
     num_slice, train_set_images128_orig, train_set_images256_orig
 )
@@ -42,17 +42,39 @@ print(round(time.time() - start, 2), "s")
 print("Making model...")
 start = time.time()
 model = Sequential()
-input_dim = int((128 / num_slice) ** 2 * 3)
-output_dim = int((256 / num_slice) ** 2 * 3)
+layers_dim = []
+input_dim = int((128 / num_slice) ** 2 * 3)  # 768
+layers_dim.append(input_dim)
+layers_dim.append(5000)
+output_dim = int((256 / num_slice) ** 2 * 3)  # 3072
+layers_dim.append(output_dim)
+
+# First hidden layer
 model.add(
     Dense(
-        output_dim,
-        input_dim=input_dim,
+        layers_dim[1],
+        input_dim=layers_dim[0],
+        activation="relu",
+        kernel_initializer=initializers.he_normal(),
+    )
+)
+# Hidden layers
+for i in range(len(layers_dim) - 3):
+    model.add(
+        Dense(
+            layers_dim[i + 2],
+            activation="relu",
+            kernel_initializer=initializers.he_normal(),
+        )
+    )
+# Output layer
+model.add(
+    Dense(
+        layers_dim[len(layers_dim) - 1],
         activation="sigmoid",
         kernel_initializer=initializers.he_normal(),
     )
 )
-# model.add(Dense(192, activation="sigmoid", kernel_initializer=initializers.he_normal(),))
 model.compile(
     loss="mean_squared_error", optimizer=optimizers.Adam(), metrics=["accuracy"],
 )
@@ -62,7 +84,7 @@ history = model.fit(
     train_set_X,
     train_set_Y,
     validation_split=0.25,
-    epochs=500,
+    epochs=300,
     batch_size=100,
     shuffle=True,
 )

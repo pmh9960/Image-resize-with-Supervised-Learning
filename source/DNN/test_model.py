@@ -71,8 +71,8 @@ def last_model():
     return file_list[-1]
 
 
-folder_name = "20200310_1711"
-# folder_name = last_model()
+# folder_name = "20200310_1711"
+folder_name = last_model()
 loaded_model = load_model(folder_name)
 num_file = open("models/" + folder_name + "/num_slice.txt", "r")
 num_slice = int(num_file.read())

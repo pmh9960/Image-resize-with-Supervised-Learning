@@ -2,7 +2,6 @@
 preprocessed_images/*
 sample_images/*
 .DS_Store
-models/*
 .vscode/
 old_models/
 
